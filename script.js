@@ -3,7 +3,10 @@ const fulWidth = 0.99 * document.documentElement.clientWidth;
 const fulHeight = 0.99 * document.documentElement.clientHeight;
 const body = document.querySelector(`body`);
 
-class Circle {
+//Circles class  - made for circles objects which will have thair positions
+//and velocities represented as vectors, a raius, an id and a color
+
+class Circle { 
     constructor(id, radius, position, velocity, color) {
 
         this.id = id;
@@ -12,12 +15,21 @@ class Circle {
         this.velocity = velocity;
         this.color = color;
 
-        this.createDiv = function() { 
+
+        //Method for creating a html element - div with rounded borders
+        //which will graphicaly represent the circle object
+
+        this.createDiv = function() {
             let circleDiv = document.createElement(`div`);
             circleDiv.id = (`circle_${id}`);
             circleDiv.classList.add(`circle`);
             body.appendChild(circleDiv);
         };
+
+
+        //Method for updating circles position and speed vectors
+        //for each time iteration. It contains the conditions
+        //for circle collisions with "walls" - the viewport edges
 
         this.update = function() {
             const delta = 1;
@@ -45,6 +57,11 @@ class Circle {
             };
         };
 
+
+        //method synchronises the position of a DIV element
+        //representing the circle object with the current object
+        //coordinates
+
         this.draw = function() {
             let circleDiv = document.getElementById(`circle_${id}`);
             circleDiv.style.left = `${this.position[0] - this.radius}px`;
@@ -53,6 +70,14 @@ class Circle {
 
     };
 };
+
+
+//circle with circle collision detecting algorythm relies
+//on the array of pairs - numbers (or id) of circle objects
+//which can collide with each other. e.x.: pair [1, 2]
+//represents possible collision of circles with numbers 1 and 2
+//there can't be collision of a circle to itsels, or [1, 1] pair
+//and each pair is unique, so there is no [2, 1] pair for example
 
 function getPairs(number) {
     let pairs = [];
@@ -63,6 +88,11 @@ function getPairs(number) {
     }
     return pairs;
 };
+
+
+//function creates and array of circle objects and DIV elements for each of them
+//all the circles are the same bu their coordinates and velocity vectors are
+//randomized
 
 function createCircles (numberOfCircles) {
     let circles = [];
@@ -80,6 +110,9 @@ function createCircles (numberOfCircles) {
     return circles;
 };
 
+
+//function which to see if there was a circle to circle collision 
+
 function gotCollision (circle_1, circle_2) {
     let dx = circle_1.position[0] - circle_2.position[0];
     let dy = circle_1.position[1] - circle_2.position[1];
@@ -87,6 +120,9 @@ function gotCollision (circle_1, circle_2) {
                     (circle_1.radius + circle_2.radius) ? true : false;
     return collision;
 };
+
+//function which "pushes out" circles which collided with enough speed
+//to have interpenetration. 
 
 function PushOut (circle_1, circle_2) {
     let vector = collisionVector(circle_1, circle_2);
@@ -99,6 +135,10 @@ function PushOut (circle_1, circle_2) {
     circle_2.position[0] = circle_1.position[0] + vector[0];
     circle_2.position[1] = circle_1.position[1] + vector[1];
 };
+
+
+//function which computes the resulting velocity vectors
+//of the circles as a result of their collision
 
 function updateSpeedsWhenCirclesCollide (circle_1, circle_2) {
     let vectorCol = collisionVector(circle_1, circle_2);
@@ -131,12 +171,21 @@ function updateSpeedsWhenCirclesCollide (circle_1, circle_2) {
     circle_2.velocity = v_2_PostCollision_oldBasis;
 };
 
+
+//function gets the vector, which connects
+//centers of colliding circles
+
 function collisionVector (circle_1, circle_2) {
     const dx = circle_2.position[0] - circle_1.position[0];
     const dy = circle_2.position[1] - circle_1.position[1];
     const vector = [dx, dy];
     return vector;
 };
+
+
+//function creates a vector, orthogonal of a given one
+//it is needed to create new basis for a coordinate
+//system of colliding circles
 
 function rotate2DVector90 ([x0, y0]) {
     const rotMatrix90 = [
@@ -149,11 +198,18 @@ function rotate2DVector90 ([x0, y0]) {
     return outputVector;
 };
 
+//function scales the vector to have a lrngth of 1
+//needed to make all basis vector a 1 length vectors
+
 function scaleVector2length1 ([x0, y0]) {
     let scale = 1/((x0**2 + y0**2)**0.5);
     let outputVector = [scale*x0, scale*y0];
     return outputVector;
 };
+
+
+//function computes a deerminant of a 2 by 2 matrix
+//needed for computing new basis matrix
 
 function getDeterminant (matrix) {
     let determinant = 1/( matrix[0][0]*matrix[1][1] - 
@@ -161,12 +217,18 @@ function getDeterminant (matrix) {
     return determinant;
 };
 
+//function computes an inverse of a 2 by 2 matrix
+//needed for computing new basis matrix
+
 function getInverse (matrix)  {
     let det = getDeterminant(matrix);
     let inverse = [ [ matrix[1][1]/det, -matrix[0][1]/det ],
                     [ -matrix[1][0]/det, matrix[0][0]/det ] ];
     return inverse;
 };
+
+
+//functions computes a velocity vector for a new basis
 
 function getVectorInNewBasis (vector, basis_matrix) {
     let vectorInNewBasis = [];
@@ -177,13 +239,23 @@ function getVectorInNewBasis (vector, basis_matrix) {
     return vectorInNewBasis
 };
 
+
+//actual circles creation
+
 let numberOfCircles = 15;
 let circles = createCircles(numberOfCircles);
+
+
+//possible circle collision pairs array
+
 let pairs = getPairs(numberOfCircles);
 
 document.documentElement.style.setProperty(`--circleColor`, circles[0].color);
 document.documentElement.style.setProperty(`--circleWidth`, `${circles[0].radius * 2}px`);
 document.documentElement.style.setProperty(`--circleHeight`, `${circles[0].radius * 2}px`);
+
+
+//cycle with a timestep of 10ms, circle positions are updated every cycle step
 
 window.setInterval( () => {
 
