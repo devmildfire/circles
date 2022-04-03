@@ -4,15 +4,22 @@
     --circleHeight: 20px;
 }
 
+label {
+  display: block;
+  font: 1rem 'Fira Sans', sans-serif;
+}
+
 
   body {
     margin: 0;
     font-size: 2rem;
     display: flex;
     flex: 1;
+    align-items: stretch;
     min-height: 100vh;
     align-items: center;
     background-color: #018DED;
+
   }
 
   .circle {
@@ -23,4 +30,17 @@
     position: absolute; 
     box-sizing: border-box;
     margin: 0px;   
+  }
+
+  #controlsDiv, #circleSpace {
+    height: 100vh;
+    border: 2px solid black;
+  }
+  
+  #circleSpace {
+    
+    
+    flex: auto;
+    background-color: blueviolet;
+    border: 2px solid black;
   }

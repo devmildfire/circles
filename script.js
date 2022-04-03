@@ -1,7 +1,14 @@
+let intervalID;
 
-const fulWidth = 0.99 * document.documentElement.clientWidth;
-const fulHeight = 0.99 * document.documentElement.clientHeight;
-const body = document.querySelector(`body`);
+const numberInput = document.querySelector(`#input_1`);
+
+
+const circleSpace = document.querySelector(`#circleSpace`);
+
+const fulWidth = circleSpace.clientWidth;
+const fulHeight = circleSpace.clientHeight;
+const spaceTop = circleSpace.clientTop;
+const spaceLeft = circleSpace.offsetLeft;
 
 //Circles class  - made for circles objects which will have thair positions
 //and velocities represented as vectors, a raius, an id and a color
@@ -23,7 +30,7 @@ class Circle {
             let circleDiv = document.createElement(`div`);
             circleDiv.id = (`circle_${id}`);
             circleDiv.classList.add(`circle`);
-            body.appendChild(circleDiv);
+            circleSpace.appendChild(circleDiv);
         };
 
 
@@ -36,14 +43,14 @@ class Circle {
             this.position = [   this.position[0] + delta*this.velocity[0],
                                 this.position[1] + delta*this.velocity[1]   ]; 
             
-            if (this.position[0] >= (fulWidth - this.radius) ) {
+            if (this.position[0] >= (fulWidth + spaceLeft - this.radius) ) {
                 this.velocity[0] *= -1;
-                this.position[0] = fulWidth - this.radius - 1;
+                this.position[0] = fulWidth + spaceLeft - this.radius - 1;
             };
 
-            if (this.position[0] <= this.radius) {
+            if (this.position[0] <= spaceLeft + this.radius) {
                 this.velocity[0] *= -1;
-                this.position[0] = this.radius + 1;
+                this.position[0] = spaceLeft + this.radius + 1;
             };
 
             if (this.position[1] >= (fulHeight - this.radius) ) {
@@ -239,10 +246,43 @@ function getVectorInNewBasis (vector, basis_matrix) {
     return vectorInNewBasis
 };
 
+//function to delete all circle objects in circles array and
+//all associated divs, also stops the "setInterval" loop
+
+function ShowStop (circlesArray) {
+    clearInterval(intervalId);
+    circlesArray = [];
+    circleSpace.innerHTML = '';
+};
+
+
+//cycle with a timestep of 10ms, circle positions are updated every cycle step
+
+function ShowTime () {
+    intervalId = window.setInterval( () => {
+
+        circles.forEach( (circle) => {
+            circle.update();
+        });
+    
+        pairs.forEach( (pair) => {
+            if ( gotCollision( circles[pair[0]], circles[pair[1]] ) ) {
+                updateSpeedsWhenCirclesCollide( circles[pair[0]], circles[pair[1]] );
+                PushOut ( circles[pair[0]], circles[pair[1]] );
+            };
+        });
+    
+        circles.forEach( (circle) => {
+            circle.draw();
+        });
+    
+    }, 10); 
+};
+
 
 //actual circles creation
 
-let numberOfCircles = 15;
+let numberOfCircles = numberInput.value;
 let circles = createCircles(numberOfCircles);
 
 
@@ -254,24 +294,12 @@ document.documentElement.style.setProperty(`--circleColor`, circles[0].color);
 document.documentElement.style.setProperty(`--circleWidth`, `${circles[0].radius * 2}px`);
 document.documentElement.style.setProperty(`--circleHeight`, `${circles[0].radius * 2}px`);
 
+ShowTime ();
 
-//cycle with a timestep of 10ms, circle positions are updated every cycle step
-
-window.setInterval( () => {
-
-    circles.forEach( (circle) => {
-        circle.update();
-    });
-
-    pairs.forEach( (pair) => {
-        if ( gotCollision( circles[pair[0]], circles[pair[1]] ) ) {
-            updateSpeedsWhenCirclesCollide( circles[pair[0]], circles[pair[1]] );
-            PushOut ( circles[pair[0]], circles[pair[1]] );
-        };
-    });
-
-    circles.forEach( (circle) => {
-        circle.draw();
-    });
-
-}, 10);
+numberInput.onchange = function() {
+    ShowStop (circles);
+    numberOfCircles = numberInput.value;
+    circles = createCircles(numberOfCircles);
+    pairs = getPairs(numberOfCircles);
+    ShowTime ();
+};
