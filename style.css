@@ -17,7 +17,6 @@ label {
     flex: 1;
     align-items: stretch;
     min-height: 100vh;
-    align-items: center;
     background-color: #018DED;
   }
 
@@ -40,8 +39,10 @@ label {
   #numberParagraph {
     color:black;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: max(16px, 20vw);
+    font-size: max(16px, 10vw);
     position: absolute;
-    top: 5vh;
-    left: 30vw;
+    top: 35%;
+    left: 40%;
+    margin: 0px;
+    padding: 0px;
   }
