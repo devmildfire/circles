@@ -19,7 +19,6 @@ label {
     min-height: 100vh;
     align-items: center;
     background-color: #018DED;
-
   }
 
   .circle {
@@ -31,23 +30,17 @@ label {
     box-sizing: border-box;
     margin: 0px;   
   }
-
-  #controlsDiv, #circleSpace {
-    height: 100vh;
-    border: 2px solid black;
-  }
   
   #circleSpace {
     flex: auto;
     background-color: blueviolet;
-    border: 2px solid black;
+    height: 100vh;
   }
 
   #numberParagraph {
     color:black;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: max(16px, 20vw);
-    
     position: absolute;
     top: 5vh;
     left: 30vw;
