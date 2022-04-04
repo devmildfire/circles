@@ -107,8 +107,8 @@ function createCircles (numberOfCircles) {
         let CurrentCircle = new Circle(i);
         CurrentCircle.radius = 20;
         CurrentCircle.color = `white`;
-        CurrentCircle.position = [ Math.floor(Math.random()*(fulWidth - CurrentCircle.radius )), 
-                                    Math.floor(Math.random()*(fulHeight - CurrentCircle.radius )) ];
+        CurrentCircle.position = [ spaceLeft + Math.floor(Math.random()*fulWidth) - CurrentCircle.radius, 
+                                   spaceTop + Math.floor(Math.random()*fulHeight) - CurrentCircle.radius ];
         CurrentCircle.velocity = [ Math.floor(Math.random()*10) - 5, 
                                     Math.floor(Math.random()*10) - 5  ];
         circles.push(CurrentCircle);
