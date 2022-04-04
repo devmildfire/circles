@@ -1,6 +1,7 @@
 let intervalID;
 
-const numberInput = document.querySelector(`#input_1`);
+// const numberInput = document.querySelector(`#input_1`);
+const numSpan = document.getElementById(`number`);
 
 
 const circleSpace = document.querySelector(`#circleSpace`);
@@ -280,15 +281,42 @@ function ShowTime () {
 };
 
 
+
 //actual circles creation
 
-let numberOfCircles = numberInput.value;
+let numberOfCircles = Number(numSpan.textContent);
 let circles = createCircles(numberOfCircles);
+let pairs = getPairs(numberOfCircles);
 
+// numSpan.textContent = numberOfCircles;
+
+function makeLess() {
+    if (numberOfCircles > 2) {
+        numberOfCircles -= 1;
+        numSpan.textContent = numberOfCircles;
+
+        ShowStop (circles);
+        circles = createCircles(numberOfCircles);
+        pairs = getPairs(numberOfCircles);
+        ShowTime ();
+    }
+};
+
+function makeMore() {
+    if (numberOfCircles < 100) {
+        numberOfCircles += 1;
+        numSpan.textContent = numberOfCircles;
+
+        ShowStop (circles);
+        circles = createCircles(numberOfCircles);
+        pairs = getPairs(numberOfCircles);
+        ShowTime ();
+
+    }
+};
 
 //possible circle collision pairs array
 
-let pairs = getPairs(numberOfCircles);
 
 document.documentElement.style.setProperty(`--circleColor`, circles[0].color);
 document.documentElement.style.setProperty(`--circleWidth`, `${circles[0].radius * 2}px`);
@@ -296,10 +324,10 @@ document.documentElement.style.setProperty(`--circleHeight`, `${circles[0].radiu
 
 ShowTime ();
 
-numberInput.onchange = function() {
-    ShowStop (circles);
-    numberOfCircles = numberInput.value;
-    circles = createCircles(numberOfCircles);
-    pairs = getPairs(numberOfCircles);
-    ShowTime ();
-};
+// numberInput.onchange = function() {
+//     ShowStop (circles);
+//     numberOfCircles = numberInput.value;
+//     circles = createCircles(numberOfCircles);
+//     pairs = getPairs(numberOfCircles);
+//     ShowTime ();
+// };
