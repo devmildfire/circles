@@ -6,10 +6,18 @@ const numSpan = document.getElementById(`number`);
 
 const circleSpace = document.querySelector(`#circleSpace`);
 
-const fulWidth = circleSpace.clientWidth;
-const fulHeight = circleSpace.clientHeight;
-const spaceTop = circleSpace.clientTop;
-const spaceLeft = circleSpace.offsetLeft;
+let fulWidth = circleSpace.clientWidth;
+let fulHeight = circleSpace.clientHeight;
+let spaceTop = circleSpace.clientTop;
+let spaceLeft = circleSpace.offsetLeft;
+
+window.addEventListener("resize", () => {
+    fulWidth = circleSpace.clientWidth;
+    fulHeight = circleSpace.clientHeight;
+    spaceTop = circleSpace.clientTop;
+    spaceLeft = circleSpace.offsetLeft;    
+});
+
 
 //Circles class  - made for circles objects which will have thair positions
 //and velocities represented as vectors, a raius, an id and a color
